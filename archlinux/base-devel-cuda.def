@@ -1,0 +1,24 @@
+Bootstrap: docker
+From: archimg/base-devel:latest
+
+%post
+    pacman --noconfirm -Syu --needed c-ares bazel python-numpy cuda nvidia-utils nccl \
+        cudnn python-pip python-wheel python-setuptools python-h5py vim \
+        python-keras-applications python-keras-preprocessing asp
+
+    rm -f /var/cache/pacman/pkg/* /var/lib/pacman/sync/* 
+
+    NOW=`date`
+    echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
+
+%runscript
+    echo "Container was created $NOW"
+    exec "$@"
+
+%labels
+    Author hans@viess.mn
+    Version v1.0.0
+
+%help
+    This container is setup to compile all sorts of CUDA related stuff, including
+    tensorflow!
